@@ -58,7 +58,7 @@ DeviceManager& DeviceManager::getInstance() {
 }
 
 bool DeviceManager::isDeviceTypeAvailable(const DeviceType type) const {
-  return deviceTypeToInfo_.contains(type);
+  return deviceTypeToInfo_.count(type);
 }
 
 unsigned DeviceManager::getDeviceCount(const DeviceType type) const {
