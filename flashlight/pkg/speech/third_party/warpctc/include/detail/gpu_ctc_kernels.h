@@ -12,7 +12,7 @@ struct CTASegReduce {
     enum {NV = NT * VT};
 
     union Storage {
-        typename CTAScan<NT>::Storage scanStorage;
+        typename mgpu::CTAScan<NT>::Storage scanStorage;
         int indices[NV];
     };
 
@@ -39,7 +39,7 @@ struct CTASegReduce {
         __syncthreads();
 
         //Count the number of encountered end flags
-        int scan = CTAScan<NT>::Scan(tid, popc(endFlags), shared.scanStorage, numUniqueLabels);
+        int scan = mgpu::CTAScan<NT>::Scan(tid, mgpu::popc(endFlags), shared.scanStorage, numUniqueLabels);
 
         __syncthreads();
 
@@ -290,7 +290,7 @@ void compute_betas_and_grad_kernel (const ProbT* probs, const int *label_sizes,
 
         __syncthreads();
 
-        CTAMergesort<NT, VT, true, true, int, int, mgpu::less<int>>
+        mgpu::CTAMergesort<NT, VT, true, true, int, int, mgpu::less<int>>
             (key, gather_val, keys_shared, gather_indices, S, tid, mgpu::less<int>());
 
         __syncthreads();

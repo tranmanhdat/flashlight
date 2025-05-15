@@ -69,7 +69,7 @@ std::vector<std::vector<std::string>> mapIndexToToken(
       if (p == -1) {
         break;
       }
-      auto token = dicts[kTargetIdx].getEntry(p);
+      auto token = dicts[fl::pkg::speech::kTargetIdx].getEntry(p);
       tokens.push_back(token);
     }
     batchTokensPath.push_back(tokens);
@@ -124,7 +124,7 @@ std::vector<AlignedWord> postprocessASG(
   bool inWord = false;
   int silStart = 0;
   for (int i = 0; i < utf16Ltrs.size(); i++) {
-    if (utf16Ltrs[i] == utf16conv.from_bytes(kSilToken)) {
+    if (utf16Ltrs[i] == utf16conv.from_bytes(fl::pkg::speech::kSilToken)) {
       if (inWord) { // found end of word, insert
         const double endTimeMs = msPerFrame * i;
         const double startTimeMs = msPerFrame * stFrame;
@@ -167,7 +167,7 @@ std::vector<AlignedWord> postprocessASG(
 // once we are ready to move out of experimental
 std::function<
     std::vector<AlignedWord>(const std::vector<std::string>&, int, double)>
-getWordSegmenter(std::shared_ptr<SequenceCriterion> criterion) {
+getWordSegmenter(std::shared_ptr<fl::pkg::speech::SequenceCriterion> criterion) {
   const std::string& desc = criterion->prettyString();
   const std::string asgDesc = "AutoSegmentationCriterion";
   const std::string ctcDesc = "ConnectionistTemporalClassificationCriterion";
