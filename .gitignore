@@ -53,3 +53,6 @@ wheels/
 .vscode
 .vs
 CMakeSettings.json
+
+# ignore models folder
+model/

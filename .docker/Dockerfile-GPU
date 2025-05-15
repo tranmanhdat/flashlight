@@ -58,7 +58,7 @@ RUN apt-get update && \
         vim \
         emacs \
         nano \
-        htop libfmt-dev \
+        htop \
         # nccl: for flashlight
         libnccl2 libnccl-dev \
         # libsndfile
@@ -96,8 +96,19 @@ COPY --from=cuda_kenlm      /opt/kenlm      /opt/kenlm
 ENV KENLM_ROOT=/opt/kenlm
 
 ENV MKLROOT="/opt/intel/mkl"
-RUN mkdir /root/flashlight
-COPY . /root/flashlight
+RUN ln -s /opt/intel/oneapi/mkl/latest /opt/intel/mkl
+
+#TO-DO: add libfmt-dev in the first stage
+# install libfmt-dev # actually it should be installed in first stage, but use cache now 
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive $APT_INSTALL \
+    libfmt-dev && \
+    apt-get clean && \
+    apt-get -y autoremove && \
+    rm -rf /var/lib/apt/lists/*
+
+# RUN mkdir /root/flashlight
+# COPY . /root/flashlight
 
 # # build oneDNN
 # RUN cd /tmp && \
@@ -111,7 +122,6 @@ COPY . /root/flashlight
 #              -DDNNL_BUILD_EXAMPLES=OFF \
 #              -DDNNL_BUILD_TESTS=OFF && \
 #     make install -j$(nproc)
-RUN ln -s /opt/intel/oneapi/mkl/latest /opt/intel/mkl
 # RUN cd /root/flashlight && mkdir -p build && \
 #     cd build && cmake .. -DCMAKE_BUILD_TYPE=Release \
 #                          -DCMAKE_INSTALL_PREFIX=/opt/flashlight \
